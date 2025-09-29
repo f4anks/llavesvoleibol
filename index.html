@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Llave Clasificatoria - 16 Equipos (Automático)</title>
+    <style>
+        /* Estilos generales y colores modernos con acentos vinotinto */
+        :root {
+            --color-fondo-claro: #f4f7f6;
+            --color-fondo-secundario: #e0e6e4;
+            --color-primario-vinotinto: #800000;
+            --color-secundario-vinotinto: #a83232;
+            --color-texto-oscuro: #333333;
+            --color-texto-claro: #ffffff;
+            --color-borde-claro: #c2c2c2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-fondo-claro);
+            color: var(--color-texto-oscuro);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--color-primario-vinotinto);
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+
+        /* Contenedor principal de la llave */
+        .bracket-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 25px;
+            background-color: var(--color-fondo-secundario);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estilo para cada ronda */
+        .round {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .round-title {
+            text-align: center;
+            font-weight: bold;
+            color: var(--color-primario-vinotinto);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--color-borde-claro);
+            font-size: 1.3em;
+        }
+        
+        /* Estilo para cada partido (juego) */
+        .match {
+            background-color: var(--color-texto-claro);
+            border: 1px solid var(--color-borde-claro);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Estilo para los inputs de equipo y ganador */
+        .team-input, .winner-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 5px;
+            border: 1px solid var(--color-borde-claro);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        /* ESTILO ESPECÍFICO PARA EL GANADOR (Vinotinto) */
+        .winner-input {
+            margin-top: 8px;
+            background-color: var(--color-primario-vinotinto);
+            color: var(--color-texto-claro);
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .winner-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .winner-input:hover {
+            background-color: var(--color-secundario-vinotinto);
+        }
+
+        .sets-input-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        /* Inputs para los puntos de los sets */
+        .set-input {
+            width: 50px;
+            padding: 6px;
+            border: 1px solid var(--color-borde-claro);
+            border-radius: 5px;
+            background-color: var(--color-fondo-claro);
+            color: var(--color-texto-oscuro);
+            text-align: center;
+            font-size: 0.9em;
+        }
+        
+        /* Estilo para la Gran Final */
+        .final-match {
+            grid-column: 5 / 6;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .champion {
+            background-color: #ffd700;
+            color: var(--color-primario-vinotinto);
+            padding: 18px;
+            margin-top: 25px;
+            border-radius: 8px;
+            font-size: 1.5em;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Llave Clasificatoria del Torneo 🏆 (Avance Automático 16vos -> 8vos)</h1>
+
+    <div class="bracket-container">
+        
+        <div class="round">
+            <h2 class="round-title">16vos de Final</h2>
+            <div class="match">
+                <input type="text" class="team-input" value="Rayo Vinotinto" placeholder="Equipo 1">
+                <input type="text" class="team-input" value="Fuerza Blanca" placeholder="Equipo 2">
+                <input type="text" class="winner-input" id="w1" onkeyup="propagateWinner('w1', 't9')">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" value="Panteras F.C." placeholder="Equipo 3">
+                <input type="text" class="team-input" value="Halcones del Sur" placeholder="Equipo 4">
+                <input type="text" class="winner-input" id="w2" onkeyup="propagateWinner('w2', 't10')">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" value="Dragones Rojos" placeholder="Equipo 5">
+                <input type="text" class="team-input" value="Titanes Azules" placeholder="Equipo 6">
+                <input type="text" class="winner-input" id="w3" onkeyup="propagateWinner('w3', 't11')">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" value="Ciclones F.C." placeholder="Equipo 7">
+                <input type="text" class="team-input" value="Eagles Dorados" placeholder="Equipo 8">
+                <input type="text" class="winner-input" id="w4" onkeyup="propagateWinner('w4', 't12')">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" value="Spartanos F.C." placeholder="Equipo 9">
+                <input type="text" class="team-input" value="Vikings Negros" placeholder="Equipo 10">
+                <input type="text" class="winner-input" id="w5" onkeyup="propagateWinner('w5', 't13')">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" value="Huracanes F.C." placeholder="Equipo 11">
+                <input type="text" class="team-input" value="Delfines Marinos" placeholder="Equipo 12">
+                <input type="text" class="winner-input" id="w6" onkeyup="propagateWinner('w6', 't14')">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" value="Lobos Grises" placeholder="Equipo 13">
+                <input type="text" class="team-input" value="Tigres Blancos" placeholder="Equipo 14">
+                <input type="text" class="winner-input" id="w7" onkeyup="propagateWinner('w7', 't15')">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" value="Fantasmas F.C." placeholder="Equipo 15">
+                <input type="text" class="team-input" value="Estrellas Verdes" placeholder="Equipo 16">
+                <input type="text" class="winner-input" id="w8" onkeyup="propagateWinner('w8', 't16')">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="round">
+            <h2 class="round-title">8vos de Final</h2>
+            <div class="match">
+                <input type="text" class="team-input" id="t9" value="Ganador M1" placeholder="Ganador M1">
+                <input type="text" class="team-input" id="t10" value="Ganador M2" placeholder="Ganador M2">
+                <input type="text" class="winner-input" placeholder="Ganador del Partido">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" id="t11" value="Ganador M3" placeholder="Ganador M3">
+                <input type="text" class="team-input" id="t12" value="Ganador M4" placeholder="Ganador M4">
+                <input type="text" class="winner-input" placeholder="Ganador del Partido">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" id="t13" value="Ganador M5" placeholder="Ganador M5">
+                <input type="text" class="team-input" id="t14" value="Ganador M6" placeholder="Ganador M6">
+                <input type="text" class="winner-input" placeholder="Ganador del Partido">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" id="t15" value="Ganador M7" placeholder="Ganador M7">
+                <input type="text" class="team-input" id="t16" value="Ganador M8" placeholder="Ganador M8">
+                <input type="text" class="winner-input" placeholder="Ganador del Partido">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="round">
+            <h2 class="round-title">4tos de Final</h2>
+            <div class="match">
+                <input type="text" class="team-input" value="Ganador C1" placeholder="Ganador C1">
+                <input type="text" class="team-input" value="Ganador C2" placeholder="Ganador C2">
+                <input type="text" class="winner-input" placeholder="Ganador del Partido">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+            <div class="match">
+                <input type="text" class="team-input" value="Ganador C3" placeholder="Ganador C3">
+                <input type="text" class="team-input" value="Ganador C4" placeholder="Ganador C4">
+                <input type="text" class="winner-input" placeholder="Ganador del Partido">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="round">
+            <h2 class="round-title">Semifinal</h2>
+            <div class="match">
+                <input type="text" class="team-input" value="Ganador SF1" placeholder="Ganador SF1">
+                <input type="text" class="team-input" value="Ganador SF2" placeholder="Ganador SF2">
+                <input type="text" class="winner-input" placeholder="Ganador del Partido">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+        </div>
+        
+        <div class="round final-match">
+            <h2 class="round-title">Gran Final</h2>
+            <div class="match">
+                <input type="text" class="team-input" value="Finalista A" placeholder="Finalista 1">
+                <input type="text" class="team-input" value="Finalista B" placeholder="Finalista 2">
+                <input type="text" class="winner-input" placeholder="Ganador Final">
+                <div class="sets-input-group">
+                    <input type="number" class="set-input" placeholder="Set 1" min="0">
+                    <input type="number" class="set-input" placeholder="Set 2" min="0">
+                    <input type="number" class="set-input" placeholder="Set 3" min="0">
+                </div>
+            </div>
+
+            <div class="champion">
+                CAMPEÓN: **[Escriba el nombre aquí]**
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /**
+         * Función JavaScript para copiar el nombre del ganador a la siguiente ronda.
+         * Se activa cada vez que se presiona una tecla en el campo del ganador.
+         * * @param {string} sourceId - ID del input del ganador (ej: 'w1').
+         * @param {string} targetId - ID del input del equipo en la siguiente ronda (ej: 't9').
+         */
+        function propagateWinner(sourceId, targetId) {
+            // 1. Obtiene el valor del campo del ganador
+            const winnerName = document.getElementById(sourceId).value;
+            
+            // 2. Encuentra el campo de la siguiente ronda
+            const targetInput = document.getElementById(targetId);
+            
+            // 3. Establece el valor del campo de la siguiente ronda
+            if (targetInput) {
+                targetInput.value = winnerName;
+            }
+        }
+    </script>
+
+</body>
+</html>
